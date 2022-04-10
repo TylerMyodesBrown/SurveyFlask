@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %} Start Page {% endblock %}
+{% block content %} 
+<h1>{{survey.questions[count].question}}</h1>
+<form action="/question_next">
+    {% for answer in survey.questions[count].choices %}
+        <input type="radio" name="answer" value={{answer}}>{{answer}}</input>
+    {% endfor %}
+    <br>
+    <button>Next Question</button>
+</form>
+{% for answer in survey.questions[count].choices %}
+{% endfor %}
+{% endblock %}
