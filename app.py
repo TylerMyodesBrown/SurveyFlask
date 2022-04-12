@@ -2,24 +2,24 @@
 from random import randint, choice, sample
 # import pdb
 from surveys import satisfaction_survey
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, session
 from flask_debugtoolbar import DebugToolbarExtension
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'WhatATime'
 debug = DebugToolbarExtension(app)
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+app.config["SECRET_KEY"] = "4534gdghjk5d#$RGR^HDG"
 
-responses = []
+responses = session['res']
 
-count = 0
+session['count']=0
 
 survey_length = len(satisfaction_survey.questions)
 
 @app.route('/')
 def show_survey():
-    global count
-    if count == 0:
+    if session.get['count'] == 0:
         return render_template('start.html', survey=satisfaction_survey)
     else:
         return render_template('thanks.html', survey=satisfaction_survey, res=responses, zip=zip)
@@ -38,10 +38,11 @@ def show_question(num):
         return redirect('/')
         
 
-@app.route('/question_next')
+@app.route('/question_next', methods=["POST"])
 def setup_next_question():
     answer = request.args['answer']
-    global count
-    count = count + 1
+    count = session.get['count'] + 1
+    session['count'] = count
     responses.append(answer)
+    session['res'] = responses
     return redirect(f'/question/{count}')
