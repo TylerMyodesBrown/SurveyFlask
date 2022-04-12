@@ -11,7 +11,6 @@ debug = DebugToolbarExtension(app)
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config["SECRET_KEY"] = "4534gdghjk5d#$RGR^HDG"
 
-responses = session['res']
 
 session['count']=0
 
@@ -20,6 +19,7 @@ survey_length = len(satisfaction_survey.questions)
 @app.route('/')
 def show_survey():
     if session.get['count'] == 0:
+        responses = session['res']
         return render_template('start.html', survey=satisfaction_survey)
     else:
         return render_template('thanks.html', survey=satisfaction_survey, res=responses, zip=zip)
@@ -43,6 +43,7 @@ def setup_next_question():
     answer = request.args['answer']
     count = session.get['count'] + 1
     session['count'] = count
+    responses = session['res']
     responses.append(answer)
     session['res'] = responses
     return redirect(f'/question/{count}')
